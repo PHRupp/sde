@@ -35,9 +35,6 @@ class DiffusionMapsKD():
 		r = np.sum(K, axis=0)
 		Di = np.diag(1/r)
 		P = np.matmul(Di, K)
-		print(K)
-		print(Di)
-		print(P)
 		
 		D_right = np.diag((r)**0.5)
 		D_left = np.diag((r)**-0.5)

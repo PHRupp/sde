@@ -30,19 +30,30 @@ class DiffusionMapsPat():
 		"""
 		n = X.shape[0]
 		distance_map = euclidean_distances(X, X)
-		distribution_map = np.exp(-np.power(distance_map,2) / alpha)
+		dist_map = np.exp(-np.power(distance_map,2) / alpha)
 		
-		distribution_totals = np.sum(distribution_map, axis=0)
-		Di = np.array(1/distribution_totals).reshape( (n,1) )
-		P = Di * distribution_map
-		print('-------------------------------')
-		print(distribution_map)
-		print(Di)
-		print(P)
+		dist_totals = np.sum(dist_map, axis=0).reshape( (n,1) )
+		Di = np.array(1/dist_totals)
+		P = Di * dist_map
 		
-		D_right = np.power( distribution_totals, 0.5)
-		D_left = np.power( distribution_totals, -0.5)
+		D_right = np.power( dist_totals, 0.5)
+		D_left = np.power( dist_totals, -0.5)
 		P_prime = D_right * (P * D_left)
+		
+		###
+		K = np.exp(-distance_map**2 / alpha)
+		
+		r = np.sum(K, axis=0)
+		Di_kd = np.diag(1/r)
+		P_kd = np.matmul(Di_kd, K)
+		
+		D_right_kd = np.diag((r)**0.5)
+		D_left_kd = np.diag((r)**-0.5)
+		P_prime_kd = np.matmul(D_right_kd, np.matmul(P_kd,D_left_kd))
+		###
+		print(P_kd - P)
+		print(np.matmul(P_kd,D_left_kd) - (D_left * P))
+		print(P_prime_kd - P_prime)
 
 		return P_prime, P, Di, distance_map, D_left
 		
