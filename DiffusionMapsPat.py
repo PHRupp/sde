@@ -13,7 +13,7 @@ class DiffusionMapsPat():
 	
 	@staticmethod
 	def fit_transform(X, new_dimenions: int, alpha: float = 0.15):
-		P_prime, P, Di, K, D_left = DiffusionMapsPat.find_diffusion_matrix(X, alpha)
+		P_prime, D_left = DiffusionMapsPat.find_diffusion_matrix(X, alpha)
 		Xp = DiffusionMapsPat.find_diffusion_map(P_prime, D_left, new_dimenions)
 		return Xp
 	
@@ -29,33 +29,16 @@ class DiffusionMapsPat():
 			P_prime, P, Di, K, D_left
 		"""
 		n = X.shape[0]
-		distance_map = euclidean_distances(X, X)
-		dist_map = np.exp(-np.power(distance_map,2) / alpha)
+		dist_map = np.exp(-np.power( euclidean_distances(X, X) ,2) / alpha)
 		
 		dist_totals = np.sum(dist_map, axis=0).reshape( (n,1) )
-		Di = np.array(1/dist_totals)
-		P = Di * dist_map
+		D_right = np.power( dist_totals, 0.5).reshape( (n,1) )
+		D_left = np.power( dist_totals, -0.5).reshape( (1,n) )
 		
-		D_right = np.power( dist_totals, 0.5)
-		D_left = np.power( dist_totals, -0.5)
+		P = np.array(1/dist_totals) * dist_map
 		P_prime = D_right * (P * D_left)
-		
-		###
-		K = np.exp(-distance_map**2 / alpha)
-		
-		r = np.sum(K, axis=0)
-		Di_kd = np.diag(1/r)
-		P_kd = np.matmul(Di_kd, K)
-		
-		D_right_kd = np.diag((r)**0.5)
-		D_left_kd = np.diag((r)**-0.5)
-		P_prime_kd = np.matmul(D_right_kd, np.matmul(P_kd,D_left_kd))
-		###
-		print(P_kd - P)
-		print(np.matmul(P_kd,D_left_kd) - (D_left * P))
-		print(P_prime_kd - P_prime)
 
-		return P_prime, P, Di, distance_map, D_left
+		return P_prime, D_left.reshape( (n,1) )
 		
 	@staticmethod
 	def find_diffusion_map(P_prime, D_left, n_eign=3):
