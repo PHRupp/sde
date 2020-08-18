@@ -32,9 +32,10 @@ data_factory = DataFactory( seed )
 #X = data_factory.create_data_helix( num_points, rand_weight, t_max=20 )
 #X = data_factory.create_sine_wave( num_points, rand_weight, x_max=20 )
 X = data_factory.create_data_torus( num_points, rand_weight )
+X = data_factory.create_data_spiral( num_points, rand_weight )
 
 # save original data to file
-np.savetxt('X.csv', X, delimiter=',')
+#np.savetxt('X.csv', X, delimiter=',')
 
 diff_map = diffusion_map.DiffusionMap.from_sklearn(
 	n_evecs = new_dimensions,

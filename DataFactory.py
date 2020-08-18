@@ -125,3 +125,30 @@ class DataFactory():
         ])
         
         return X
+    
+    def create_data_spiral( self, num_points: int, rand_weight: int ):
+        """https://mathworld.wolfram.com/Torus.html"""
+        
+        ns = int(np.ceil( np.sqrt(num_points) ))
+        n = int(ns**2)
+        
+        a = 1.0
+        step_rand = 0.025
+        v = np.linspace(0, 2.0*np.pi, ns) + step_rand * random(ns)
+        
+        r = a * v
+    
+        x = np.array([r * np.cos(v) + rand_weight * random(ns) for i in range(ns)]).flatten()
+        y = np.array([r * np.sin(v) + rand_weight * random(ns) for i in range(ns)]).flatten()
+        z = np.array([3 * random(ns) for i in range(ns)]).flatten()
+        
+        t = 2 * x**2 - 3 * x + rand_weight * random(n)
+        
+        X = np.hstack([
+            x.reshape((n,1)),
+            y.reshape((n,1)),
+            z.reshape((n,1)),
+            t.reshape((n,1))
+        ])
+        
+        return X
