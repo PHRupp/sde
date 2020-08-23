@@ -17,7 +17,7 @@ do
     mem_k=$(pmap ${main_pid} | tail -n 1 | awk '/[0-9]K/{print $2}')
     unix_nanosec=$(date +"%s%N")
     
-    # if the memory was successfully retrived write it to file
+    # if the memory was successfully retrieved write it to file
     if [ ! -z "${mem_k}" ]
     then
         echo "${unix_nanosec},${mem_k}" >> ${outfile}

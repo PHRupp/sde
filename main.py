@@ -31,11 +31,11 @@ data_factory = DataFactory( seed )
 # calculate the fields
 #X = data_factory.create_data_helix( num_points, rand_weight, t_max=20 )
 #X = data_factory.create_sine_wave( num_points, rand_weight, x_max=20 )
-X = data_factory.create_data_torus( num_points, rand_weight )
+#X = data_factory.create_data_torus( num_points, rand_weight )
 X = data_factory.create_data_spiral( num_points, rand_weight )
 
 # save original data to file
-#np.savetxt('X.csv', X, delimiter=',')
+np.savetxt('X.csv', X, delimiter=',')
 
 diff_map = diffusion_map.DiffusionMap.from_sklearn(
 	n_evecs = new_dimensions,
@@ -72,12 +72,19 @@ embedding_plot( diff_map, scatter_kwargs = {'c': Xp1[:,0], 'cmap':'Spectral'} )
 data_plot( diff_map, dim=3, scatter_kwargs = {'cmap':'Spectral'} )
 plt.show()
 
-
-#plt.scatter(Xp2[:,0], Xp2[:,1])
-#plt.show()
-
-#plt.scatter(Xp3[:,0], Xp3[:,1])
-#plt.show()
+# The plot doesn't always scale very well if one of the dimensions
+# have extremely small variation. The limits on the x-axis must be
+# enforced so that it doesn't show up as a verticle line and that 
+# the true profile is visible. 
+xmin=np.min(Xp2[:,0])
+xmax=np.max(Xp2[:,0])
+ymin=np.min(Xp2[:,1])
+ymax=np.max(Xp2[:,1])
+plt.title('KDNuggets Diffusion Map Reduction')
+plt.scatter(Xp2[:,0], Xp2[:,1])
+plt.xlim(left=xmin, right=xmax)
+plt.ylim(bottom=ymin, top=ymax)
+plt.show()
 
 
 

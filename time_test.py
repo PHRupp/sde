@@ -37,7 +37,7 @@ diff_map = diffusion_map.DiffusionMap.from_sklearn(
 )
 
 time_df = pd.DataFrame(
-	index=[i for i in range(len(num_points))], 
+	index=list(range(len(num_points))), 
 	columns=['sklearn', 'kdnuggets', 'kdnuggets_pat']
 	)
 
