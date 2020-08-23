@@ -18,9 +18,8 @@ def get_pid_memory_usage( pid: str ):
 
     match = re.search( size_reg, size_str )
 
-    # convert kilobytes to bytes
-    size_bytes = int( match.group(1) ) * 1000 if match else None
+    size_k_bytes = int( match.group(1) ) if match else None
     
-    return size_bytes
+    return size_k_bytes
 
 

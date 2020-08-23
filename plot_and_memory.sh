@@ -20,6 +20,7 @@ do
     # if the memory was successfully retrieved write it to file
     if [ ! -z "${mem_k}" ]
     then
-        echo "${unix_nanosec},${mem_k}" >> ${outfile}
+        mem_kb_num=${mem_k%K}
+        echo "${unix_nanosec},${mem_kb_num}" >> ${outfile}
     fi
 done
